@@ -17,7 +17,7 @@ public class PlugBoard {
 		return instance;
 	}
 	
-	public int plugBoardOut(int in) {
+	public int getOutput(int in) {
 		return mapping[in];
 	}
 	
