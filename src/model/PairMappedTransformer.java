@@ -8,10 +8,13 @@ public abstract class PairMappedTransformer {
 	private boolean[] slotAvailable = new boolean[Constants.CHAR_COUNT];
 	
 	public PairMappedTransformer() {
-		
+		for(int i =0; i < slotAvailable.length; i++) {
+			slotAvailable[i] = true;
+		}
 	}
 	
 	public PairMappedTransformer(int seed, int pairs) {
+		this();
 		Random rand = new Random(seed);
 		HashSet<Integer> pool = new HashSet<Integer>();
 		for(int i = 0; i<Constants.CHAR_COUNT ; i++) {
@@ -37,6 +40,7 @@ public abstract class PairMappedTransformer {
 				} 
 				count++;
 			}
+			pool.remove(b);
 			addPair(a,b);
 		}
 		
@@ -49,7 +53,11 @@ public abstract class PairMappedTransformer {
 	}
 	
 	public void addPair(int letter, int toLetter) {
+		//System.out.println("adding " + letter + " and " + toLetter );
+		//System.out.println( slotAvailable[letter] + " and " + slotAvailable[toLetter] );
 		if(slotAvailable[letter] && slotAvailable[toLetter]) {
+			//System.out.println("adding " + letter + " and " + toLetter );
+			
 			mapping[letter] = toLetter;
 			mapping[toLetter] = letter;
 			slotAvailable[letter] = false; 

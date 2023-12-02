@@ -61,8 +61,9 @@ public class Rotor {
 	
 	public Integer getInboundOutput(int in) {
 		int i = 0;
+		in = Constants.normalise(in+offset);
 		for(int input: mapping) {
-			if(input == Constants.normalise(in+offset)) return i;
+			if(input == in) return i;
 			i++;
 		}
 		return null; //this should never happen

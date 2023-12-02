@@ -25,6 +25,7 @@ public class Constants {
 			for(Integer c: chars) {
 				if(count == hit) {
 					mapping[i] = c;
+					chars.remove(c);
 					break;
 				}
 				count++;
