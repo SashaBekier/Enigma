@@ -11,19 +11,7 @@ public class Rotor {
 	
 	public Rotor(int seed) {
 		Random rand = new Random(seed);
-		HashSet<Integer> chars = new HashSet<Integer>();
-		for(int i = 0; i < Constants.CHAR_COUNT ; i++) {
-			chars.add(i);
-		}
-		for(int i = 0; i < Constants.CHAR_COUNT ; i++) {
-			int hit = rand.nextInt(chars.size());
-			for(Integer c: chars) {
-				if(i == hit) {
-					mapping[i] = c;
-					break;
-				}
-			}
-		}
+		mapping = Constants.buildMapping(rand);
 		notches.add(rand.nextInt(Constants.CHAR_COUNT));
 	}
 	

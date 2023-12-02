@@ -1,44 +1,13 @@
 package model;
 
-public class PlugBoard {
-	private PlugBoard instance = new PlugBoard();
-	private int[] mapping = new int[Constants.CHAR_COUNT];
-	private boolean[] plugAvailable = new boolean[Constants.CHAR_COUNT];
+public class PlugBoard extends PairMappedTransformer{
 	
-	
-	private PlugBoard() {
-		for(int i=0 ; i < Constants.CHAR_COUNT; i++) {
-			mapping[i] = i;
-			plugAvailable[i] = true;
-		}
+	public PlugBoard() {
+		super();
 	}
 	
-	public PlugBoard getPlugBoard() {
-		return instance;
+	public PlugBoard(int seed, int plugs) {
+		super(seed, plugs);
 	}
 	
-	public int getOutput(int in) {
-		return mapping[in];
-	}
-	
-	public void addPlug(int letter, int toLetter) {
-		if(plugAvailable[letter] && plugAvailable[toLetter]) {
-			mapping[letter] = toLetter;
-			mapping[toLetter] = letter;
-			plugAvailable[letter] = false; 
-			plugAvailable[toLetter] = false;
-		}
-	}
-	
-	public String getOpenPorts() {
-		String output = "";
-		for(int i=0 ; i < Constants.CHAR_COUNT; i++) {
-			if(plugAvailable[i]) output += Constants.CHAR_SET.charAt(i);
-		}
-		return output;
-	}
-	
-	public int[] getMapping() {
-		return mapping;
-	}
 }
