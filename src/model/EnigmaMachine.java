@@ -8,6 +8,10 @@ public class EnigmaMachine {
 	private PlugBoard plugBoard;
 	private Reflector reflector;
 	
+	public EnigmaMachine(int seed) {
+		this(seed, 0);
+	}
+	
 	public EnigmaMachine(int seed, int rotorCount) {
 		Random rand = new Random(seed);
 		plugBoard = new PlugBoard(rand.nextInt(),rand.nextInt(6)+3);
@@ -17,10 +21,6 @@ public class EnigmaMachine {
 			rotors.add(new Rotor(rand.nextInt()));
 			rotors.get(i).setPosition(i);
 		}
-	}
-	
-	public EnigmaMachine(int seed) {
-		this(seed, 0);
 	}
 	
 	public EnigmaMachine(PlugBoard plugBoard, ArrayList<Rotor> rotors, Reflector reflector ) {
@@ -56,14 +56,14 @@ public class EnigmaMachine {
 		return output;
 	}
 	
-	public void configureRotors(String setting, boolean setPosition) {
+	public void configureRotors(String setting, MachineConfig component) {
 		int steps = Math.min(setting.length(), rotors.size());
 		for(int i = 0; i < steps; i++) {
 			Integer value = Common.encodeChar(setting.charAt(i));
 			if(value != null) {
-				if(setPosition) {
+				if(component == MachineConfig.POSITION) {
 					rotors.get(i).setPosition(value);
-				} else {
+				} else if (component == MachineConfig.OFFSET) {
 					rotors.get(i).setOffset(value);
 				}
 			}
@@ -76,6 +76,10 @@ public class EnigmaMachine {
 	
 	public void setReflector(Reflector reflector) {
 		this.reflector = reflector;
+	}
+	
+	public void setRotor(int index, Rotor rotor) {
+		if(index < rotors.size()) rotors.add(index, rotor);
 	}
 	
 	private int generateRotorCount(Random rand) {
