@@ -8,8 +8,7 @@ public class Main {
 		
 		EnigmaMachine mach = new EnigmaMachine(seed,3);
 		mach.configureRotors("obscure",true);
-		
-		String output = mach.encode("THIS IS SOME TEXT it will IGNORE CHARACTERS NOT IN ITS ALPHABET");
+		String output = mach.encode("WHY SOMETIMES IVE BELIEVED AS MANY AS SIX IMPOSSIBLE THINGS BEFORE BREAKFAST");
 		System.out.println(output);
 		
 		//reset machine to starting state in order to decode message

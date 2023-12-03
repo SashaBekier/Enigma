@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Random;
 
 public class Common {
@@ -12,26 +11,6 @@ public class Common {
 		while(i < 0) i += Common.CHAR_COUNT;
 		if(i >= Common.CHAR_COUNT) i %= Common.CHAR_COUNT;
 		return i;
-	}
-	
-	public static int[] buildMapping(Random rand){
-		int[] mapping = new int[CHAR_COUNT];
-		HashSet<Integer> chars = new HashSet<Integer>();
-		for(int i = 0; i < CHAR_COUNT ; i++) {
-			chars.add(i);
-		}
-		for(int i = 0; i < CHAR_COUNT ; i++) {
-			mapping[i] = randomMember(rand, chars);
-			chars.remove(mapping[i]);
-		}
-		return mapping;
-	}
-
-	public static void drawMapping(int[] mapping) {
-		System.out.println(CHAR_SET);
-		for(int i = 0; i< CHAR_COUNT; i++) {
-			System.out.print(CHAR_SET.charAt(mapping[i]));
-		}
 	}
 	
 	public static int randomMember(Random rand, Collection<Integer> pool) {

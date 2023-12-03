@@ -21,6 +21,7 @@ public abstract class PairMappedTransformer {
 		for(int i = 0; i<Common.CHAR_COUNT ; i++) {
 			pool.add(i);
 		}
+		if(pairs < 1) pairs = rand.nextInt(6)+3;
 		for(int i = 0; i < pairs; i++) {
 			int a = Common.randomMember(rand, pool);
 			pool.remove(a);

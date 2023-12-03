@@ -19,7 +19,11 @@ public class EnigmaMachine {
 		}
 	}
 	
-	public EnigmaMachine(ArrayList<Rotor> rotors,PlugBoard plugBoard,Reflector reflector ) {
+	public EnigmaMachine(int seed) {
+		this(seed, 0);
+	}
+	
+	public EnigmaMachine(PlugBoard plugBoard, ArrayList<Rotor> rotors, Reflector reflector ) {
 		this.rotors = rotors;
 		this.plugBoard = plugBoard;
 		this.reflector = reflector;
@@ -55,11 +59,13 @@ public class EnigmaMachine {
 	public void configureRotors(String setting, boolean setPosition) {
 		int steps = Math.min(setting.length(), rotors.size());
 		for(int i = 0; i < steps; i++) {
-			int value = setting.charAt(i) - Common.CHAR_SET.charAt(0);
-			if(setPosition) {
-				rotors.get(i).setPosition(value);
-			} else {
-				rotors.get(i).setOffset(value);
+			Integer value = Common.encodeChar(setting.charAt(i));
+			if(value != null) {
+				if(setPosition) {
+					rotors.get(i).setPosition(value);
+				} else {
+					rotors.get(i).setOffset(value);
+				}
 			}
 		}
 	}
