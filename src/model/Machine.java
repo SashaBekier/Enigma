@@ -12,9 +12,10 @@ public class Machine {
 		Random rand = new Random(seed);
 		plugBoard = new PlugBoard(rand.nextInt(),rand.nextInt(6)+3);
 		reflector = new Reflector(rand.nextInt());
-		int rotorCount = rand.nextInt(4) + 3;
-		for(int i = 0; i < rotorCount; i++) {
+		for(int i = 0; i < 3; i++) {
 			rotors.add(new Rotor(rand.nextInt()));
+
+			rotors.get(i).setPosition(i);
 		}
 	}
 	
@@ -25,28 +26,34 @@ public class Machine {
 	public String encode(String msg, boolean verbose) {
 		String output = "";
 		for(int i = 0; i< msg.length();i++) {
-			int signal = msg.charAt(i) - Constants.CHAR_SET.charAt(0);
-			if(verbose)System.out.println("New Signal = " + signal);
-			signal = plugBoard.getOutput(signal);
-			if(verbose)System.out.println("After Plug Board pass 1 Signal = " + signal);
-			for(int j = 0; j < rotors.size(); j++) {
-				if(j == 0) {
-					rotors.get(j).bumpPosition();
-				} else if (rotors.get(j-1).checkNotch()) {
-					rotors.get(j).bumpPosition();
+			if(msg.charAt(i) < Constants.CHAR_SET.charAt(0) || msg.charAt(i) > Constants.CHAR_SET.charAt(Constants.CHAR_COUNT-1)) {
+				output += msg.charAt(i);
+			} else {
+				int signal = msg.charAt(i) - Constants.CHAR_SET.charAt(0);
+				if(verbose)System.out.println("New Signal = " + signal);
+				signal = plugBoard.getOutput(signal);
+				if(verbose)System.out.println("After Plug Board pass 1 Signal = " + signal);
+				for(int j = 0; j < rotors.size(); j++) {
+					if(j == 0) {
+						rotors.get(j).bumpPosition();
+						if(verbose)System.out.println("Rotor " + j + " advanced to position " + rotors.get(j).getPosition());
+					} else if (rotors.get(j-1).checkNotch()) {
+						rotors.get(j).bumpPosition();
+						if(verbose)System.out.println("Rotor " + j + " advanced to position " + rotors.get(j).getPosition());
+					}
+					signal = rotors.get(j).getOutboundOutput(signal);
+					if(verbose)System.out.println("After rotor " + j + "outbound Signal = " + signal);
 				}
-				signal = rotors.get(j).getOutboundOutput(signal);
-				if(verbose)System.out.println("After rotor " + j + "outbound Signal = " + signal);
+				signal = reflector.getOutput(signal);
+				if(verbose)System.out.println("After Reflector Signal = " + signal);
+				for(int j = rotors.size()-1; j >= 0 ; j--) {
+					signal = rotors.get(j).getInboundOutput(signal);
+					if(verbose)System.out.println("After rotor " + j + "inbound Signal = " + signal);
+				}
+				signal = plugBoard.getOutput(signal);
+				if(verbose)System.out.println("After plugboard pass 2 Signal = " + signal);
+				output += Constants.CHAR_SET.charAt(signal);
 			}
-			signal = reflector.getOutput(signal);
-			if(verbose)System.out.println("After Reflector Signal = " + signal);
-			for(int j = 0; j < rotors.size(); j++) {
-				signal = rotors.get(j).getInboundOutput(signal);
-				if(verbose)System.out.println("After rotor " + j + "inbound Signal = " + signal);
-			}
-			signal = plugBoard.getOutput(signal);
-			if(verbose)System.out.println("After plugboard pass 2 Signal = " + signal);
-			output += Constants.CHAR_SET.charAt(signal);
 		}
 		return output;
 	}

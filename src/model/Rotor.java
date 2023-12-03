@@ -21,7 +21,7 @@ public class Rotor {
 		for (int i = 0; i < mapping.length; i++) {
 			try {
 				mapping[i] = map.charAt(i) - 'A';
-				charCheck[map.charAt(i) - 'A'] = false;
+				charCheck[map.charAt(i) - 'A'] = true;
 			} catch (IndexOutOfBoundsException e){
 				throw new InvalidConfigException("All letters must be represented in the mapping.");
 			}
@@ -47,7 +47,7 @@ public class Rotor {
 	}
 	
 	public void bumpPosition() {
-		position = Constants.normalise(++position);
+		setPosition(++position);
 	}
 	
 	public boolean checkNotch() {
@@ -56,17 +56,25 @@ public class Rotor {
 	}
 	
 	public int getOutboundOutput(int in) {
-		return mapping[Constants.normalise(in+offset)];
+		return mapping[Constants.normalise(in+offset+position)];
 	}
 	
 	public Integer getInboundOutput(int in) {
 		int i = 0;
-		in = Constants.normalise(in+offset);
 		for(int input: mapping) {
-			if(input == in) return i;
+			if(input == in) return Constants.normalise(i-offset-position);
 			i++;
 		}
 		return null; //this should never happen
+	}
+	
+	public int getPosition() {
+		return position;
+	}
+
+	public int[] getMapping() {
+		// TODO Auto-generated method stub
+		return mapping;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -34,6 +35,28 @@ public class Constants {
 		return mapping;
 	}
 
-
+	public static char intToChar(int in) {
+		return  CHAR_SET.charAt(in);
+	}
+	
+	public static void drawMapping(int[] mapping) {
+		System.out.println(CHAR_SET);
+		for(int i = 0; i< CHAR_COUNT; i++) {
+			System.out.print(intToChar(mapping[i]));
+		}
+	}
+	
+	public static int randomMember(Random rand, Collection<Integer> pool) {
+		int a = rand.nextInt(pool.size());
+		int count = 0;
+		for(Integer hit: pool) {
+			if(a == count) {
+				a = hit;
+				break;
+			} 
+			count++;
+		}
+		return a;
+	}
 	
 }
