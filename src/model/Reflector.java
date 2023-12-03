@@ -7,6 +7,6 @@ public class Reflector extends PairMappedTransformer {
 	}
 	
 	public Reflector(int seed) {
-		super(seed, Constants.CHAR_COUNT / 2);
+		super(seed, Common.CHAR_COUNT / 2);
 	}
 }

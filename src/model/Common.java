@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 
-public class Constants {
+public class Common {
 	public static final String CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final int CHAR_COUNT = CHAR_SET.length();
 	
 	public static int normalise(int i) {
-		while(i < 0) i += Constants.CHAR_COUNT;
-		if(i >= Constants.CHAR_COUNT) i %= Constants.CHAR_COUNT;
+		while(i < 0) i += Common.CHAR_COUNT;
+		if(i >= Common.CHAR_COUNT) i %= Common.CHAR_COUNT;
 		return i;
 	}
 	
@@ -21,28 +21,16 @@ public class Constants {
 			chars.add(i);
 		}
 		for(int i = 0; i < CHAR_COUNT ; i++) {
-			int hit = rand.nextInt(chars.size());
-			int count = 0;
-			for(Integer c: chars) {
-				if(count == hit) {
-					mapping[i] = c;
-					chars.remove(c);
-					break;
-				}
-				count++;
-			}
+			mapping[i] = randomMember(rand, chars);
+			chars.remove(mapping[i]);
 		}
 		return mapping;
 	}
 
-	public static char intToChar(int in) {
-		return  CHAR_SET.charAt(in);
-	}
-	
 	public static void drawMapping(int[] mapping) {
 		System.out.println(CHAR_SET);
 		for(int i = 0; i< CHAR_COUNT; i++) {
-			System.out.print(intToChar(mapping[i]));
+			System.out.print(CHAR_SET.charAt(mapping[i]));
 		}
 	}
 	
@@ -57,6 +45,22 @@ public class Constants {
 			count++;
 		}
 		return a;
+	}
+	
+	public static boolean inCharSet(char c) {
+		if(Common.CHAR_SET.contains("" + c)) return true;
+		return false;
+	}
+	
+	public static Integer encodeChar(char c) {
+		for(int i = 0; i < CHAR_COUNT; i++) {
+			if(CHAR_SET.charAt(i)==c) return i;
+		}
+		return null;
+	}
+	
+	public static Character decodeInt(int i) {
+		return CHAR_SET.charAt(normalise(i));
 	}
 	
 }

@@ -4,26 +4,25 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class Rotor {
-	private int[] mapping = new int[Constants.CHAR_COUNT];
+	private int[] mapping = new int[Common.CHAR_COUNT];
 	private int offset = 0;
 	private int position = 0;
 	private HashSet<Integer> notches= new HashSet<Integer>();
 	
 	public Rotor(int seed) {
 		Random rand = new Random(seed);
-		mapping = Constants.buildMapping(rand);
-		notches.add(rand.nextInt(Constants.CHAR_COUNT));
+		mapping = Common.buildMapping(rand);
+		notches.add(rand.nextInt(Common.CHAR_COUNT));
 	}
 	
 	public Rotor(String map, String notch) throws InvalidConfigException{
-		boolean[] charCheck = new boolean[Constants.CHAR_COUNT];
+		boolean[] charCheck = new boolean[Common.CHAR_COUNT];
 		for (int i = 0; i< charCheck.length;i++ )charCheck[i] = false;
 		for (int i = 0; i < mapping.length; i++) {
-			try {
-				mapping[i] = map.charAt(i) - 'A';
-				charCheck[map.charAt(i) - 'A'] = true;
-			} catch (IndexOutOfBoundsException e){
-				throw new InvalidConfigException("All letters must be represented in the mapping.");
+			Integer charCode = Common.encodeChar(map.charAt(i));
+			if(charCode != null) {
+				mapping[i] = charCode;
+				charCheck[charCode] = true;
 			}
 		}
 		for (int i = 0; i< charCheck.length;i++ ) {
@@ -31,19 +30,20 @@ public class Rotor {
 		}
 		
 		for (int i = 0; i < notch.length(); i++) {
-			if(!notches.contains(notch.charAt(i)-'A')){
-				notches.add(notch.charAt(i)-'A');
+			Integer charCode = Common.encodeChar(notch.charAt(i));
+			if(charCode != null && !notches.contains(charCode)){
+				notches.add(charCode);
 			}
 		}
 		if(notches.size()<1) throw new InvalidConfigException("At least one notch is required");
 	}
 	
 	public void setOffset(int offset) {
-		this.offset = Constants.normalise(offset);
+		this.offset = Common.normalise(offset);
 	}
 	
 	public void setPosition(int pos) {
-		position = Constants.normalise(pos);
+		position = Common.normalise(pos);
 	}
 	
 	public void bumpPosition() {
@@ -51,18 +51,18 @@ public class Rotor {
 	}
 	
 	public boolean checkNotch() {
-		if(notches.contains(Constants.normalise(position))) return true;
+		if(notches.contains(Common.normalise(position+offset))) return true;
 		return false;
 	}
 	
 	public int getOutboundOutput(int in) {
-		return mapping[Constants.normalise(in+offset+position)];
+		return mapping[Common.normalise(in+offset+position)];
 	}
 	
 	public Integer getInboundOutput(int in) {
 		int i = 0;
 		for(int input: mapping) {
-			if(input == in) return Constants.normalise(i-offset-position);
+			if(input == in) return Common.normalise(i-offset-position);
 			i++;
 		}
 		return null; //this should never happen
@@ -73,7 +73,6 @@ public class Rotor {
 	}
 
 	public int[] getMapping() {
-		// TODO Auto-generated method stub
 		return mapping;
 	}
 	
